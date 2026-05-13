@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Country Data Schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "flags": {
+        "type": "object",
+        "properties": {
+          "png": { "type": "string"},
+          "svg": { "type": "string"},
+          "extra": { "type": "string"},
+          "alt": { "type": "string" }
+        },
+        "required": ["png", "svg", "alt"]
+      },
+      "name": {
+        "type": "object",
+        "properties": {
+          "common": { "type": "string" },
+          "official": { "type": "string" },
+          "nativeName": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "official": { "type": "string" },
+                "common": { "type": "string" }
+              },
+              "required": ["official", "common"]
+            }
+          }
+        },
+        "required": ["common", "official", "nativeName"]
+      },
+      "currencies": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "symbol": { "type": "string" }
+          },
+          "required": ["name", "symbol"]
+        }
+      },
+      "capital": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "required": ["flags", "name", "currencies", "capital"]
+  }
+}

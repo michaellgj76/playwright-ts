@@ -1,5 +1,5 @@
 import z from "zod";
-import { CountrySchema } from "./restcountries-schemas";
+import { CountrySchema } from "../schemas/restcountries-schemas";
 
 export type Country = z.infer<typeof CountrySchema>;
 

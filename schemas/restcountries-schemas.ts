@@ -5,6 +5,8 @@ export const CountrySchema = z.object({
     common: z.string(),
   }),
   capital: z.string().array(),
+  extra: z.string().optional(), // Some countries might not have an extra field
+  // extra2: z.string(),
   currencies: z.record(
     z.string(),
     z.object({
@@ -13,3 +15,5 @@ export const CountrySchema = z.object({
     }),
   ),
 });
+
+export const CountriesResponse = z.array(CountrySchema);
