@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page, BrowserContext } from "@playwright/test";
+import def from "ajv/dist/vocabularies/discriminator";
 
 test("has title", async ({ page }) => {
   await page.goto("https://playwright.dev/");
@@ -76,4 +77,138 @@ test("Verify Playwright navigation.", async ({ page }) => {
     page.getByRole("heading", { name: "Playwright enables reliable" }),
   ).toBeVisible();
   await page.getByRole("link", { name: "Get started" }).click();
+});
+
+test.describe("Verify switching between dark and light themes on Playwright homepage", () => {
+  let context: BrowserContext;
+  let page: Page;
+
+  test.beforeEach(async ({ browser }) => {
+    // important to set the system theme to light before running the test, otherwise the test may fail
+    context = await browser.newContext({ colorScheme: "light" });
+    page = await context.newPage();
+  });
+
+  test.afterEach(async () => {
+    if (context) {
+      await context.close();
+    }
+  });
+
+  test("Verify switching between dark and light", async () => {
+    await page.goto("https://playwright.dev/");
+    // Another method to ensure the theme is Emulate light theme
+    // await page.emulateMedia({ colorScheme: "light" });
+    await expect(
+      page.getByRole("button", { name: "Switch between dark and light" }),
+      "Expected button to have a hint attribute, but it was not found.",
+    ).toHaveAttribute("title", "system mode");
+    // another way to check the hint attribute
+    await expect(
+      await page
+        .getByRole("button", { name: "Switch between dark and light" })
+        .getAttribute("title"),
+      "Expected button to have a hint attribute, but it was not found.",
+    ).toContain("system");
+
+    // checking the initial theme (system) by checking the background color
+    const defaultBackgroundColor = "rgba(0, 0, 0, 0)"; // light theme
+    let expectedCodeBackgroundColor = "rgb(246, 247, 248)"; // light theme
+    await expect(page.locator("body")).toHaveCSS(
+      "background-color",
+      defaultBackgroundColor,
+    );
+    await expect(page.getByRole("navigation", { name: "Main" })).toHaveCSS(
+      "background-color",
+      "rgb(255, 255, 255)",
+    );
+    await expect(page.getByText("npm i -g @playwright/cli@")).toHaveCSS(
+      "background-color",
+      expectedCodeBackgroundColor,
+    );
+    await expect(
+      page.locator("section").filter({ hasText: "Powerful toolingTest" }),
+    ).toHaveCSS("background-color", "rgb(245, 246, 247)");
+
+    // Switching to the next theme (light)
+    expectedCodeBackgroundColor = "rgb(246, 247, 248)"; // light theme
+    await page
+      .getByRole("button", { name: "Switch between dark and light" })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Switch between dark and light" }),
+      "Expected button to have a hint attribute, but it was not found.",
+    ).toHaveAttribute("title", "light mode");
+    // checking if the theme has changed by checking the background color
+    await expect(page.locator("body")).toHaveCSS(
+      "background-color",
+      defaultBackgroundColor,
+    );
+    await expect(page.getByRole("navigation", { name: "Main" })).toHaveCSS(
+      "background-color",
+      "rgb(255, 255, 255)",
+    );
+    await expect(page.getByText("npm i -g @playwright/cli@")).toHaveCSS(
+      "background-color",
+      expectedCodeBackgroundColor,
+    );
+    await expect(
+      page.locator("section").filter({ hasText: "Powerful toolingTest" }),
+    ).toHaveCSS("background-color", "rgb(245, 246, 247)");
+
+    // Switching to the next theme (dark)
+    expectedCodeBackgroundColor = "rgba(255, 255, 255, 0.1)"; // dark theme
+    await page
+      .getByRole("button", { name: "Switch between dark and light" })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Switch between dark and light" }),
+      "Expected button to have a hint attribute, but it was not found.",
+    ).toHaveAttribute("title", "dark mode");
+    // checking if the theme has changed by checking the background color
+    await expect(page.locator("body")).toHaveCSS(
+      "background-color",
+      defaultBackgroundColor,
+    );
+    await expect(page.getByRole("navigation", { name: "Main" })).toHaveCSS(
+      "background-color",
+      "rgb(36, 37, 38)",
+    );
+    await expect(page.getByText("npm i -g @playwright/cli@")).toHaveCSS(
+      "background-color",
+      expectedCodeBackgroundColor,
+    );
+    await expect(
+      page.locator("section").filter({ hasText: "Powerful toolingTest" }),
+    ).toHaveCSS("background-color", "rgba(255, 255, 255, 0.03)");
+
+    // Switching to the next theme (system)
+    expectedCodeBackgroundColor = "rgb(246, 247, 248)"; // light theme
+    await page
+      .getByRole("button", { name: "Switch between dark and light" })
+      .click();
+    await expect(
+      page.getByRole("button", { name: "Switch between dark and light" }),
+      "Expected button to have a hint attribute, but it was not found.",
+    ).toHaveAttribute("title", "system mode");
+    // checking if the theme has changed by checking the background color of the body
+    await expect(page.locator("body")).toHaveCSS(
+      "background-color",
+      defaultBackgroundColor,
+    );
+    await expect(page.getByRole("navigation", { name: "Main" })).toHaveCSS(
+      "background-color",
+      "rgb(255, 255, 255)",
+    );
+    await expect(page.getByText("npm i -g @playwright/cli@")).toHaveCSS(
+      "background-color",
+      expectedCodeBackgroundColor,
+    );
+    await expect(
+      page.locator("section").filter({ hasText: "Powerful toolingTest" }),
+    ).toHaveCSS("background-color", "rgb(245, 246, 247)");
+
+    // Closing the context to reset the theme for other tests
+    await context.close();
+  });
 });
