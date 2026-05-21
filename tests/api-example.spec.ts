@@ -25,10 +25,10 @@ test("ZOD: get countries details and validate the response schema at runtime", a
   ).toBeTruthy();
   // Other validations and logs
   console.log("Number of countries:", body.length);
-  console.log(
-    "Example of countries:",
-    body.filter((country) => country.name.common === "India"),
-  );
+  // console.log(
+  //   "Example of countries:",
+  //   body.filter((country) => country.name.common === "India"),
+  // );
   expect(body.length).toBeGreaterThan(180);
 });
 
@@ -56,9 +56,9 @@ test("AJV: get countries details and validate the response schema at runtime", a
   ).toBeTruthy();
   // Other validations and logs
   console.log("Number of countries:", body.length);
-  console.log(
-    "Example of countries:",
-    body.filter((country) => country.name.common === "India"),
-  );
+  // console.log(
+  //   "Example of countries:",
+  //   body.filter((country) => country.name.common === "India"),
+  // );
   expect(body.length).toBeGreaterThan(180);
 });
