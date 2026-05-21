@@ -19,12 +19,12 @@ Runs the tests in debug mode.
 `npx playwright codegen`
 Auto generate tests with Codegen.
 
-## Playwright’s CLI is flexible with partial matches.
+### Playwright’s CLI is flexible with partial matches.
 
-Note: You can provide the exact full name for either the spec file or the test title if needed.
+You can provide the exact full name of the spec file or the test title to reduce matches.
 
 `npx playwright test example`
-Runs the tests in a specific file.
+Runs the tests in specific files.
 
 `npx playwright test example -g "credentials"`
-Runs a specific tests in a specific file.
+Runs specific tests in specific files.
