@@ -46,7 +46,8 @@ test("Verify Playwright search.", async ({ page }) => {
 test("Verify Playwright navigation.", async ({ page }, testInfo) => {
   // Skip if the project name is 'Mobile Chrome'
   test.skip(
-    testInfo.project.name === "Mobile Chrome",
+    testInfo.project.name === "Mobile Chrome" ||
+      testInfo.project.name === "Mobile Safari",
     "Not supported in Mobile Chrome",
   );
   await page.goto("https://playwright.dev/");

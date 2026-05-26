@@ -47,6 +47,7 @@ export default defineConfig({
       name: "api-check",
       testMatch: "**/api/**",
     },
+
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
