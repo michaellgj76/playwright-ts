@@ -36,7 +36,16 @@ test.describe("Playwright Homepage UI Tests", () => {
     await expect(docHeader).toBeVisible();
   });
 
-  test("ai-3. Toggle between Dark and Light mode", async ({ page }) => {
+  test("ai-3. Toggle between Dark and Light mode", async ({
+    page,
+  }, testInfo) => {
+    // Skip if the project name is 'Mobile'
+    test.skip(
+      testInfo.project.name === "Mobile Chrome" ||
+        testInfo.project.name === "Mobile Safari",
+      "Not supported in Mobile",
+    );
+
     // Locate the theme toggle button in the navigation bar
     const themeToggle = page.getByRole("button", {
       name: "Switch between dark and light mode",

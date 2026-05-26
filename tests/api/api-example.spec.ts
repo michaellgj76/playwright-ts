@@ -1,8 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { Country } from "../types/restcountries-types";
-import { CountriesResponse } from "../schemas/restcountries-schemas";
+import { Country } from "../../types/restcountries-types";
+import { CountriesResponse } from "../../schemas/restcountries-schemas";
 import Ajv from "ajv";
-import schema from "../schemas/restcountries-schemas.json";
+import schema from "../../schemas/restcountries-schemas.json";
 
 test("ZOD: get countries details and validate the response schema at runtime", async ({
   request,

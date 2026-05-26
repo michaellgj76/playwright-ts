@@ -44,13 +44,23 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "api-check",
+      testMatch: "**/api/**",
+    },
+    {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      testMatch: "**/ui/**/*.spec.ts",
+      testIgnore: "**/api/**",
+      dependencies: ["api-check"],
     },
 
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
+      testMatch: "**/ui/**/*.spec.ts",
+      testIgnore: "**/api/**",
+      dependencies: ["api-check"],
     },
 
     // {
@@ -62,10 +72,14 @@ export default defineConfig({
     {
       name: "Mobile Chrome",
       use: { ...devices["Pixel 7"] },
+      testIgnore: "**/api/**",
+      dependencies: ["api-check"],
     },
     {
       name: "Mobile Safari",
       use: { ...devices["iPhone 14"] },
+      // If NOT in CI, ignore all files. If in CI, ignore nothing.
+      testIgnore: !process.env.CI ? "**/*" : "**/api/**",
     },
 
     /* Test against branded browsers. */

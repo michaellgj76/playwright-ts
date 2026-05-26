@@ -43,7 +43,12 @@ test("Verify Playwright search.", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("Verify Playwright navigation.", async ({ page }) => {
+test("Verify Playwright navigation.", async ({ page }, testInfo) => {
+  // Skip if the project name is 'Mobile Chrome'
+  test.skip(
+    testInfo.project.name === "Mobile Chrome",
+    "Not supported in Mobile Chrome",
+  );
   await page.goto("https://playwright.dev/");
   await expect(page.locator("h1")).toContainText(
     "Playwright enables reliable web automation for testing, scripting, and AI agents.",
@@ -82,6 +87,14 @@ test("Verify Playwright navigation.", async ({ page }) => {
 test.describe("Verify switching between dark and light themes on Playwright homepage", () => {
   let context: BrowserContext;
   let page: Page;
+  test.beforeAll(({}, testInfo) => {
+    // Skip if the project name is 'Mobile Chrome' or 'Mobile Safari'
+    test.skip(
+      testInfo.project.name === "Mobile Chrome" ||
+        testInfo.project.name === "Mobile Safari",
+      'Skipping tests on "Mobile Chrome"',
+    );
+  });
 
   test.beforeEach(async ({ browser }) => {
     // important to set the system theme to light before running the test, otherwise the test may fail
