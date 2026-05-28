@@ -1,6 +1,8 @@
 # playwright-ts
 
-Playwright examples using TypeScript.
+# Playwright TypeScript Automation Project
+
+[![Playwright Tests](https://github.com/michaellgj76/playwright-ts/actions/workflows/playwright.yml/badge.svg)](https://github.com/michaellgj76/playwright-ts/actions/workflows/playwright.yml)
 
 ## Inside that directory, you can run several commands:
 
