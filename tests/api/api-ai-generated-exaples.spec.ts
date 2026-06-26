@@ -6,7 +6,7 @@ test.describe("Playwright.dev API & Endpoint Verification", () => {
   }) => {
     // Verify the core static documentation JSON/JS layout registry is active and returning a 200 OK
     const response = await request.get(
-      "https://playwright.dev/assets/js/main.7cd3fdfb.js",
+      "https://playwright.dev/assets/js/main.8b9f84e8.js",
     );
 
     // Assert status code

@@ -8,3 +8,5 @@ node_modules/
 /playwright/.auth/
 .DS_Store
 .vscode/
+.env*
+personal-notes.txt

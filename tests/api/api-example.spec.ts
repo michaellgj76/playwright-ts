@@ -4,12 +4,15 @@ import { CountriesResponse } from "../../schemas/restcountries-schemas";
 import Ajv from "ajv";
 import schema from "../../schemas/restcountries-schemas.json";
 
-test("ZOD: get countries details and validate the response schema at runtime", async ({
+test.skip("ZOD: get countries details and validate the response schema at runtime", async ({
   request,
 }) => {
   const response = await request.get(
-    "https://restcountries.com/v3.1/all?fields=name,capital,currencies,flags",
+    "https://api.restcountries.com/countries/v5?response_fields=names.common&limit=5",
+    // "https://restcountries.com/v3.1/all?fields=name,capital,currencies,flags",
+    { headers: { Authorization: "Bearer rc_live_demo" } },
   );
+  console.log(response);
   expect(response.ok()).toBeTruthy();
   const body: Country[] = await response.json();
 
@@ -32,7 +35,7 @@ test("ZOD: get countries details and validate the response schema at runtime", a
   expect(body.length).toBeGreaterThan(180);
 });
 
-test("AJV: get countries details and validate the response schema at runtime", async ({
+test.skip("AJV: get countries details and validate the response schema at runtime", async ({
   request,
 }) => {
   const response = await request.get(
