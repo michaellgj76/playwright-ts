@@ -5,12 +5,7 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch:
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ENV: PROD
-  INKSPECTRA_BASE_URL: ${{ vars.INKSPECTRA_BASE_URL }}
-  MICHA_ADMIN_EMAIL: ${{ secrets.MICHA_ADMIN_EMAIL }}
-  MICHA_ADMIN_PASSWORD: ${{ secrets.MICHA_ADMIN_PASSWORD }}
+
 jobs:
   get-version:
     runs-on: ubuntu-latest
@@ -30,8 +25,17 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: mcr.microsoft.com/playwright:v${{ needs.get-version.outputs.version }}-jammy # Important: Run as root inside the container to avoid permission issues
-      options: --user 0
+      image: mcr.microsoft.com/playwright:v${{ needs.get-version.outputs.version }}-jammy
+      # Important: Run as root inside the container to avoid permission issues and --ipc=host prevents memory issues
+      options: --user 0 --ipc=host
+
+    env:
+      HOME: /root # For preventing Firefox failures
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ENV: PROD
+      INKSPECTRA_BASE_URL: ${{ vars.INKSPECTRA_BASE_URL }}
+      MICHA_ADMIN_EMAIL: ${{ secrets.MICHA_ADMIN_EMAIL }}
+      MICHA_ADMIN_PASSWORD: ${{ secrets.MICHA_ADMIN_PASSWORD }}
 
     steps:
       - uses: actions/checkout@v4
