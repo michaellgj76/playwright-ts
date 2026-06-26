@@ -2,6 +2,9 @@ import { test, expect, Page, BrowserContext } from "@playwright/test";
 test.use({ baseURL: process.env.INKSPECTRA_BASE_URL });
 
 test("micha test", async ({ page, baseURL }) => {
+  console.log(`\nbaseURL content:<${baseURL}>\n`);
+  console.log(`MICHA_ADMIN_EMAIL content:<${process.env.MICHA_ADMIN_EMAIL}>\n`);
+
   await page.goto("/es/login");
 
   await expect(
