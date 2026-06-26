@@ -32,7 +32,7 @@ jobs:
       - name: Install Playwright Browsers
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          sudo npx playwright install --with-deps
+          npx playwright install --with-deps
         timeout-minutes: 3
       - name: Run Playwright tests with 4 workers
         run: npx playwright test --workers 4
