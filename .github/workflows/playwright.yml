@@ -20,6 +20,8 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
   test:
+    environment: PROD
+
     needs: get-version
     timeout-minutes: 10
     runs-on: ubuntu-latest
