@@ -32,8 +32,8 @@ jobs:
       - name: Install Playwright Browsers
         run: |
           export DEBIAN_FRONTEND=noninteractive
-          npx playwright install --with-deps
-        timeout-minutes: 5
+          sudo npx playwright install chromium --with-deps
+        timeout-minutes: 3
       - name: Run Playwright tests with 4 workers
         run: npx playwright test --workers 4
       - uses: actions/upload-artifact@v4
