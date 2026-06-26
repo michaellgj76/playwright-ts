@@ -6,6 +6,10 @@ on:
     branches: [main, master]
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  ENV: PROD
+  INKSPECTRA_BASE_URL: ${{ vars.INKSPECTRA_BASE_URL }}
+  MICHA_ADMIN_EMAIL: ${{ secrets.MICHA_ADMIN_EMAIL }}
+  MICHA_ADMIN_PASSWORD: ${{ secrets.MICHA_ADMIN_PASSWORD }}
 jobs:
   test:
     timeout-minutes: 60
