@@ -5,7 +5,16 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch:
-
+    inputs:
+      target_env:
+        description: "Select the test environment"
+        required: true
+        default: "PROD"
+        type: choice
+        options:
+          - PROD
+          - STAGING
+          - DEV
 jobs:
   get-version:
     runs-on: ubuntu-latest
@@ -20,7 +29,7 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
   test:
-    environment: PROD
+    environment: ${{ github.event.inputs.target_env || 'PROD' }}
 
     needs: get-version
     timeout-minutes: 10
