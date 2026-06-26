@@ -27,6 +27,7 @@ jobs:
         run: node --test utils/scripts/*.test.js
 
   get-version:
+    needs: check-scripts
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.playwright-version.outputs.VERSION }}
