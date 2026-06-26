@@ -30,7 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-playwright-
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          npx playwright install --with-deps
         timeout-minutes: 5
       - name: Run Playwright tests with 4 workers
         run: npx playwright test --workers 4
