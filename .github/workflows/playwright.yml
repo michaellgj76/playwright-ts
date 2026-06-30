@@ -4,16 +4,61 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  ENV: PROD
-  INKSPECTRA_BASE_URL: ${{ vars.INKSPECTRA_BASE_URL }}
-  MICHA_ADMIN_EMAIL: ${{ secrets.MICHA_ADMIN_EMAIL }}
-  MICHA_ADMIN_PASSWORD: ${{ secrets.MICHA_ADMIN_PASSWORD }}
+  workflow_dispatch:
+    inputs:
+      target_env:
+        description: "Select the test environment"
+        required: true
+        default: "PROD"
+        type: choice
+        options:
+          - PROD
+          - STAGING
+          - DEV
 jobs:
-  test:
-    timeout-minutes: 60
+  check-scripts:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Run Unit Tests for Scripts
+        run: node --test utils/scripts/*.test.js
+
+  get-version:
+    needs: check-scripts
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.playwright-version.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get Playwright version from script
+        id: playwright-version
+        run: |
+          VERSION=$(node utils/scripts/get-playwright-version.js)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+  test:
+    environment: ${{ github.event.inputs.target_env || 'PROD' }}
+
+    needs: get-version
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.get-version.outputs.version }}-jammy
+      # Important: Run as root inside the container to avoid permission issues and --ipc=host prevents memory issues
+      options: --user 0 --ipc=host
+
+    env:
+      HOME: /root # For preventing Firefox failures
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      ENV: PROD
+      INKSPECTRA_BASE_URL: ${{ vars.INKSPECTRA_BASE_URL }}
+      MICHA_ADMIN_EMAIL: ${{ secrets.MICHA_ADMIN_EMAIL }}
+      MICHA_ADMIN_PASSWORD: ${{ secrets.MICHA_ADMIN_PASSWORD }}
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,18 +67,7 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm ci
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-      - name: Install Playwright Browsers
-        run: |
-          export DEBIAN_FRONTEND=noninteractive
-          npx playwright install --with-deps
-        timeout-minutes: 3
+
       - name: Run Playwright tests with 4 workers
         run: npx playwright test --workers 4
       - uses: actions/upload-artifact@v4
